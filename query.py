@@ -1,28 +1,27 @@
 import graphene
 from graphene import relay
 from graphene_sqlalchemy import SQLAlchemyObjectType, SQLAlchemyConnectionField
-from models import db_session, AGEncoded as AGEncodedModel, EquivalencyGroup as EquivalencyGroupModel
+from models import db_session, Product as ProductModel, Order as OrderModel
 
-
-class AGEncoded(SQLAlchemyObjectType):
+class Product(SQLAlchemyObjectType):
     class Meta:
-        model = AGEncodedModel
+        model = ProductModel
         interfaces = (relay.Node, )
 
-class AGEncodedConn(relay.Connection):
+class ProductConn(relay.Connection):
     class Meta:
-        node = AGEncoded
+        node = Product
 
-class EquivalencyGroup(SQLAlchemyObjectType):
+class Order(SQLAlchemyObjectType):
     class Meta:
-        model = EquivalencyGroupModel
+        model = OrderModel
         interfaces = (relay.Node, )
 
-class EquivalencyGroupConn(relay.Connection):
+class OrderConn(relay.Connection):
     class Meta:
-        node = EquivalencyGroup
+        node = Order
 
 class Query(graphene.ObjectType):
     node = relay.Node.Field()
-    allRowsAGEncoded = SQLAlchemyConnectionField(AGEncodedConn)
-    allRowsEquivalencyGroup = SQLAlchemyConnectionField(EquivalencyGroupConn)
+    allRowsProduct = SQLAlchemyConnectionField(ProductConn)
+    allRowsOrder = SQLAlchemyConnectionField(OrderConn)

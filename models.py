@@ -14,38 +14,24 @@ Base = declarative_base()
 Base.query = db_session.query_property()
 
 
-class EquivalencyGroup(Base):
-    __tablename__ = 'IGS_EQUIVALENCY_GROUP'
-    companyId = Column('id_company_fk', Integer, primary_key=True)
-    equivalencyGroupId = Column('id_equivalency_group_pk', Integer, primary_key=True)
-    name = Column('EQUIVALENCY_GROUP_NAME', String)
+class Product(Base):
+    __tablename__ = 'TB_PRODUCT'
+    __table_args__ = {'sqlite_autoincrement': True}
+    productId = Column('id_product_pk', Integer, primary_key=True)
+    name = Column(String)
+    price = Column(Float)
 
-class AGEncoded(Base):
-    __tablename__ = 'IGS_AG_ITEMS_ENCODED'
-    companyId = Column('id_company_fk', Integer, primary_key=True)
-    organizationId = Column('id_organization_fk', Integer, primary_key=True)
-    equivalencyGroupId = Column('id_equivalency_group_fk', Integer, primary_key=True)
-    m0 = Column(Integer)
-    m1 = Column(Integer)
-    m2 = Column(Integer)
-    m3 = Column(Integer)
-    m4 = Column(Integer)
-    m5 = Column(Integer)
-    m6 = Column(Integer)
-    m7 = Column(Integer)
-    m8 = Column(Integer)
-    m9 = Column(Integer)
-    m10 = Column(Integer)
-    m11 = Column(Integer)
-    m12 = Column(Integer)
-    average = Column(Integer)
-    total12m = Column('total_12m', Integer)
+class Order(Base):
+    __tablename__ = 'TB_ORDER'
+    orderId = Column('id_order_pk', Integer, primary_key=True)
+    productId = Column('id_product_fk', Integer)
+    qty = Column(Integer)
     
-    __table_args__ = (ForeignKeyConstraint([companyId, equivalencyGroupId],
-                                           [EquivalencyGroup.companyId, EquivalencyGroup.equivalencyGroupId]),
+    __table_args__ = (ForeignKeyConstraint([productId],
+                                           [Product.productId]),
                       {})
-    equivalencyGroup = relationship(
-        EquivalencyGroup,
-        backref=backref('equivalencyGroups',
+    product = relationship(
+        Product,
+        backref=backref('orders',
                         uselist=True,
                         cascade='delete,all'))
